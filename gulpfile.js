@@ -8,55 +8,65 @@ const gulp = require('gulp'),
   autoprefixer = require('gulp-autoprefixer'),
   browserSync = require('browser-sync').create();
 
+const src = {
+  js: './src/scripts/*.js',
+  pug: './src/views/*.pug',
+  stylus: './src/stylus/style.styl'
+};
+const dist = {
+  path: './dist',
+  js: './dist/script.js',
+  html: './dist/index.html',
+  css: './dist/style.css'
+};
+const defaultWatch = () => {
+  gulp.watch(src.js, ['scripts']);
+  gulp.watch('./src/stylus/**/*.styl', ['stylus']);
+  gulp.watch('./src/views/**/*.pug', ['views']);
+};
+
 gulp.task('scripts', (cb) => {
   pump([
-    gulp.src('./src/scripts/*.js'),
+    gulp.src(src.js),
     concatenate('script.js'),
     uglify(),
-    gulp.dest('dist')
+    gulp.dest(dist.path)
   ], cb);
 });
 
 gulp.task('stylus', (cb) => {
   pump([
-    gulp.src('./src/stylus/style.styl'),
+    gulp.src(src.stylus),
     stylus(),
     autoprefixer({
       browsers: ['last 2 versions', '> 1%', 'ie 9'],
       cascade: false
     }),
     cleanCSS(),
-    gulp.dest('./dist')
+    gulp.dest(dist.path)
   ], cb);
 });
 
 gulp.task('views', () => (
-  gulp.src('./src/views/*.pug')
+  gulp.src(src.pug)
     .pipe(pug({
       verbose: true,
       pretty: true
     }))
-    .pipe(gulp.dest('./dist'))
+    .pipe(gulp.dest(dist.path))
 ));
 
 gulp.task('server', () => {
   browserSync.init({
-    server: './dist'
+    server: dist.path
   });
 
-  gulp.watch('./src/scripts/*.js', ['scripts']);
-  gulp.watch('./src/stylus/**/*.styl', ['stylus']);
-  gulp.watch('./src/views/**/*.pug', ['views']);
-
-  gulp.watch('./dist/script.js').on('change', browserSync.reload);
-  gulp.watch('./dist/style.css').on('change', browserSync.reload);
-  gulp.watch('./dist/index.html').on('change', browserSync.reload);
+  defaultWatch();
+  gulp.watch([dist.js, dist.html, dist.css]).on('change', browserSync.reload);
 });
 
 gulp.task('watch', () => {
-  gulp.watch('./src/scripts/*.js', ['scripts']);
-  gulp.watch('./src/stylus/**/*.styl', ['stylus']);
-  gulp.watch('./src/views/**/*.pug', ['views']);
+  defaultWatch()
 })
 
 gulp.task('default', ['server']);
