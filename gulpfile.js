@@ -6,29 +6,22 @@ const gulp = require('gulp'),
   pump = require('pump'),
   stylus = require('gulp-stylus');
 
-gulp.task('concat', () => (
-  gulp.src('./src/scripts/*.js')
-    .pipe(concatenate('script.js'))
-    .pipe(gulp.dest('./dist/'))
-));
-
-gulp.task('compress', (cb) => {
+gulp.task('scripts', (cb) => {
   pump([
-        gulp.src('dist/script.js'),
-        uglify(),
-        gulp.dest('dist')
-    ],
-    cb
-  );
+    gulp.src('./src/scripts/*.js'),
+    concatenate('script.js'),
+    uglify(),
+    gulp.dest('dist')
+  ], cb);
 });
 
-gulp.task('stylus', () => (
-  gulp.src('./src/stylus/style.styl')
-    .pipe(stylus({
-      compress: true
-    }))
-    .pipe(gulp.dest('./dist'))
-));
+gulp.task('stylus', (cb) => {
+  pump([
+    gulp.src('./src/stylus/style.styl'),
+    stylus({compress: true}),
+    gulp.dest('./dist')
+  ], cb);
+});
 
 gulp.task('views', () => (
   gulp.src('./src/views/*.pug')
@@ -38,3 +31,11 @@ gulp.task('views', () => (
     }))
     .pipe(gulp.dest('./dist'))
 ));
+
+gulp.task('watch', () => {
+  gulp.watch('./src/scripts/*.js', ['scripts']);
+  gulp.watch('./src/stylus/**/*.styl', ['stylus']);
+  gulp.watch('./src/views/**/*.pug', ['views']);
+})
+
+gulp.task('default', ['watch']);
