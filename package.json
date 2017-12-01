@@ -23,6 +23,14 @@
   },
   "homepage": "https://github.com/leticiacostadias/holy-trinity-boilerplate#readme",
   "devDependencies": {
-    "gulp": "^3.9.1"
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-live-server": "0.0.31",
+    "gulp-pug": "^3.3.0",
+    "gulp-uglify": "^3.0.0",
+    "pump": "^2.0.0"
+  },
+  "dependencies": {
+    "gulp-css-scss": "^0.1.0"
   }
 }
