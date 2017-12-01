@@ -4,7 +4,9 @@ const gulp = require('gulp'),
   concatenate = require('gulp-concat'),
   uglify = require('gulp-uglify'),
   pump = require('pump'),
-  stylus = require('gulp-stylus');
+  stylus = require('gulp-stylus'),
+  cleanCSS = require('gulp-clean-css'),
+  autoprefixer = require('gulp-autoprefixer');
 
 gulp.task('scripts', (cb) => {
   pump([
@@ -18,7 +20,12 @@ gulp.task('scripts', (cb) => {
 gulp.task('stylus', (cb) => {
   pump([
     gulp.src('./src/stylus/style.styl'),
-    stylus({compress: true}),
+    stylus(),
+    autoprefixer({
+      browsers: ['last 2 versions', '> 1%', 'ie 9'],
+      cascade: false
+    }),
+    cleanCSS(),
     gulp.dest('./dist')
   ], cb);
 });
