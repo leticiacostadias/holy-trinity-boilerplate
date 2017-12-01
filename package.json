@@ -28,7 +28,7 @@
     "gulp-concat": "^2.6.1",
     "gulp-live-server": "0.0.31",
     "gulp-pug": "^3.3.0",
-    "gulp-scss": "^1.4.0",
+    "gulp-stylus": "^2.6.0",
     "gulp-uglify": "^3.0.0",
     "pump": "^2.0.0"
   },

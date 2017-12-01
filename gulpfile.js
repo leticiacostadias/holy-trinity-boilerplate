@@ -5,7 +5,7 @@ const gulp = require('gulp'),
   uglify = require('gulp-uglify'),
   pump = require('pump'),
   cleanCSS = require('gulp-clean-css'),
-  scss = require('gulp-scss');
+  stylus = require('gulp-stylus');
 
 gulp.task('concat', () => (
   gulp.src('./src/scripts/*.js')
@@ -22,3 +22,11 @@ gulp.task('compress', (cb) => {
     cb
   );
 });
+
+gulp.task('stylus', () => (
+  gulp.src('./src/stylus/style.styl')
+    .pipe(stylus({
+      compress: true
+    }))
+    .pipe(gulp.dest('./dist'))
+));
