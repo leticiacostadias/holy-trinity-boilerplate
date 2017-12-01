@@ -1,29 +1,70 @@
-const gulp = require('gulp'),
-  pug = require('gulp-pug'),
-  concatenate = require('gulp-concat'),
-  uglify = require('gulp-uglify'),
-  pump = require('pump'),
-  stylus = require('gulp-stylus'),
-  cleanCSS = require('gulp-clean-css'),
+const gulp     = require('gulp'),
+  pug          = require('gulp-pug'),
+  concatenate  = require('gulp-concat'),
+  uglify       = require('gulp-uglify'),
+  pump         = require('pump'),
+  stylus       = require('gulp-stylus'),
+  cleanCSS     = require('gulp-clean-css'),
   autoprefixer = require('gulp-autoprefixer'),
-  browserSync = require('browser-sync').create();
+  browserSync  = require('browser-sync').create(),
+  svgSprite    = require('gulp-svg-sprite'),
+  svgmin       = require('gulp-svgmin'),
+  imagemin     = require('gulp-imagemin'),
+  tinify       = require('gulp-tinify');
 
 const src = {
   js: './src/scripts/*.js',
   pug: './src/views/*.pug',
-  stylus: './src/stylus/style.styl'
+  stylus: './src/stylus/style.styl',
+  svg: './src/assets/icons/**/*.svg',
+  img: './src/assets/img/**/*'
 };
 const dist = {
   path: './dist',
   js: './dist/script.js',
   html: './dist/index.html',
-  css: './dist/style.css'
+  css: './dist/style.css',
+  assets: './dist/assets'
 };
 const defaultWatch = () => {
   gulp.watch(src.js, ['scripts']);
   gulp.watch('./src/stylus/**/*.styl', ['stylus']);
-  gulp.watch('./src/views/**/*.pug', ['views']);
+  gulp.watch(src.pug, ['views']);
+  gulp.watch(src.img, ['images']);
+  gulp.watch(src.svg, { ignoreInitial: false }, ['sprites']);
 };
+const configSvg = {
+  mode: {
+    symbol: {
+        dest: '',
+        sprite: 'sprite.svg',
+        example: true
+    }
+  },
+  svg: {
+    xmlDeclaration: false,
+    doctypeDeclaration: false
+  }
+};
+
+gulp.task('sprites', (cb) => {
+    pump([
+      gulp.src(src.svg),
+      svgmin(),
+      svgSprite(configSvg),
+      gulp.dest(dist.assets)
+    ], cb);
+});
+
+gulp.task('images', () => {
+  gulp.src(src.img)
+    .pipe(imagemin({
+      interlaced: true,
+      progressive: true,
+      optimizationLevel: 5
+    }))
+    .pipe(gulp.dest(dist.assets))
+});
 
 gulp.task('scripts', (cb) => {
   pump([
@@ -65,9 +106,7 @@ gulp.task('server', () => {
   gulp.watch([dist.js, dist.html, dist.css]).on('change', browserSync.reload);
 });
 
-gulp.task('watch', () => {
-  defaultWatch()
-})
+gulp.task('watch', defaultWatch);
 
 gulp.task('default', ['server']);
 gulp.task('build', ['views', 'stylus', 'scripts']);
