@@ -4,7 +4,6 @@ const gulp = require('gulp'),
   concatenate = require('gulp-concat'),
   uglify = require('gulp-uglify'),
   pump = require('pump'),
-  cleanCSS = require('gulp-clean-css'),
   stylus = require('gulp-stylus');
 
 gulp.task('concat', () => (
@@ -27,6 +26,15 @@ gulp.task('stylus', () => (
   gulp.src('./src/stylus/style.styl')
     .pipe(stylus({
       compress: true
+    }))
+    .pipe(gulp.dest('./dist'))
+));
+
+gulp.task('views', () => (
+  gulp.src('./src/views/*.pug')
+    .pipe(pug({
+      verbose: true,
+      pretty: true
     }))
     .pipe(gulp.dest('./dist'))
 ));
