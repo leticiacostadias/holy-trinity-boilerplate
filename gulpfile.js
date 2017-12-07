@@ -4,13 +4,13 @@ const gulp     = require('gulp'),
   uglify       = require('gulp-uglify'),
   pump         = require('pump'),
   stylus       = require('gulp-stylus'),
+  bootstrap    = require('bootstrap-styl'),
   cleanCSS     = require('gulp-clean-css'),
   autoprefixer = require('gulp-autoprefixer'),
   browserSync  = require('browser-sync').create(),
   svgSprite    = require('gulp-svg-sprite'),
   svgmin       = require('gulp-svgmin'),
-  imagemin     = require('gulp-imagemin'),
-  tinify       = require('gulp-tinify');
+  imagemin     = require('gulp-imagemin');
 
 const src = {
   js: './src/scripts/*.js',
@@ -78,7 +78,7 @@ gulp.task('scripts', (cb) => {
 gulp.task('stylus', (cb) => {
   pump([
     gulp.src(src.stylus),
-    stylus(),
+    stylus({use: bootstrap()}),
     autoprefixer({
       browsers: ['last 2 versions', '> 1%', 'ie 9'],
       cascade: false
@@ -108,5 +108,5 @@ gulp.task('server', () => {
 
 gulp.task('watch', defaultWatch);
 
-gulp.task('default', ['server']);
-gulp.task('build', ['views', 'stylus', 'scripts']);
+gulp.task('default', ['build', 'server']);
+gulp.task('build', ['images', 'views', 'stylus', 'scripts']);
