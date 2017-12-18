@@ -22,14 +22,14 @@ const src = {
 const dist = {
   path: './dist',
   js: './dist/script.js',
-  html: './dist/index.html',
+  html: './dist',
   css: './dist/style.css',
   assets: './dist/assets'
 };
 const defaultWatch = () => {
   gulp.watch(src.js, ['scripts']);
   gulp.watch('./src/stylus/**/*.styl', ['stylus']);
-  gulp.watch(src.pug, ['views']);
+  gulp.watch('./src/views/**/*.pug', ['views']);
   gulp.watch(src.img, ['images']);
   gulp.watch(src.svg, { ignoreInitial: false }, ['sprites']);
 };
@@ -103,10 +103,10 @@ gulp.task('server', () => {
   });
 
   defaultWatch();
-  gulp.watch([dist.js, dist.html, dist.css]).on('change', browserSync.reload);
+  gulp.watch([dist.js, dist.html, dist.assets, dist.css]).on('change', browserSync.reload);
 });
 
 gulp.task('watch', defaultWatch);
 
 gulp.task('default', ['build', 'server']);
-gulp.task('build', ['images', 'views', 'stylus', 'scripts']);
+gulp.task('build', ['sprites', 'images', 'views', 'stylus', 'scripts']);
