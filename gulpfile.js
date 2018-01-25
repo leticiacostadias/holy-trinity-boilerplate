@@ -14,7 +14,9 @@ const gulp     = require('gulp'),
 
 const src = {
   js: './src/scripts/*.js',
+  everyView: './src/views/**/*.pug',
   pug: './src/views/*.pug',
+  everyStylus: './src/stylus/**/*.styl',
   stylus: './src/stylus/style.styl',
   svg: './src/assets/icons/**/*.svg',
   img: './src/assets/img/**/*'
@@ -28,8 +30,8 @@ const dist = {
 };
 const defaultWatch = () => {
   gulp.watch(src.js, ['scripts']);
-  gulp.watch('./src/stylus/**/*.styl', ['stylus']);
-  gulp.watch('./src/views/**/*.pug', ['views']);
+  gulp.watch(src.everyStylus, ['stylus']);
+  gulp.watch(src.everyView, ['views']);
   gulp.watch(src.img, ['images']);
   gulp.watch(src.svg, { ignoreInitial: false }, ['sprites']);
 };
