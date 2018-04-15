@@ -90,14 +90,16 @@ gulp.task('stylus', (cb) => {
   ], cb);
 });
 
-gulp.task('views', () => (
-  gulp.src(src.pug)
-    .pipe(pug({
+gulp.task('views', (cb) => {
+  pump([
+    gulp.src(src.pug),
+    pug({
       verbose: true,
       pretty: true
-    }))
-    .pipe(gulp.dest(dist.path))
-));
+    }),
+    gulp.dest(dist.path)
+  ], cb);
+});
 
 gulp.task('server', () => {
   browserSync.init({
